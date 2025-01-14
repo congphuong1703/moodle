@@ -262,14 +262,49 @@ body {
   font-size: 14px;
   color: #333;
 }
+
 #quiz-timer {
 }
 
-.quiz-timer-inner h1{
+.quiz-timer-inner h1 {
   font-size: 20px;
   line-height: 20px;
 }
 
-#page-mod-quiz-summary #quiz-timer{
-  margin-top:0;
+#page-mod-quiz-summary #quiz-timer {
+  margin-top: 0;
 }
+
+.que .content img {
+  width: 100%;
+}
+
+#page.drawers .activity-header {
+  margin: 0;
+  padding: 0;
+}
+
+.path-mod {
+  .activity-header:not(:empty) {
+    background-color: #FFFFFF;
+  }
+
+  .activity-information {
+
+    .activity-dates {
+      background-color: #FFFAEF;
+      border: 1px solid #FEECC0;
+      padding-left: 20px;
+    }
+
+    .completion-info {
+      border-bottom: 0;
+    }
+  }
+}
+
+#region-main {
+  background-color: #FFFFFF !important;
+  padding: 20px !important;
+}
+

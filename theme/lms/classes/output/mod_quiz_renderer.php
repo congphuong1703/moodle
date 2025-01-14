@@ -191,8 +191,8 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
 
         $cardAccuracy = html_writer::div(
             html_writer::div(
-                html_writer::tag('h3', $mygrade_percent, ['class' => 'card-text, title-course']) .
-                html_writer::tag('p', '97%', ['class' => 'grade-percent text-lms'])
+                html_writer::tag('h3', 'Độ chính xác' , ['class' => 'card-text, title-course']) .
+                html_writer::tag('p', $mygrade_percent, ['class' => 'grade-percent text-lms'])
             , 'card-body')
         , 'card card-grade');
 

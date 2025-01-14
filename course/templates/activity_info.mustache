@@ -55,7 +55,8 @@
         {{#uservisible}}
             <div class="completion-info" data-region="completion-info">
                 {{#isautomatic}}
-                    <div class="automatic-completion-conditions" data-region ="completionrequirements" role="list" aria-label="{{#str}}completionrequirements, core_course, {{activityname}}{{/str}}">
+                    <div class="automatic-completion-conditions" data-region="completionrequirements" role="list"
+                         aria-label="{{#str}}completionrequirements, core_course, {{activityname}}{{/str}}">
                         {{#completiondetails}}
                             {{> core_course/completion_automatic }}
                         {{/completiondetails}}
@@ -71,12 +72,14 @@
     {{/hascompletion}}
 
     {{#hasdates}}
-    <div data-region="activity-dates" class="activity-dates">
-        <div class="description-inner">
-            {{#activitydates}}
-                {{>core_course/activity_date}}
-            {{/activitydates}}
+        <div data-region="activity-dates" class="activity-dates">
+            <p style="font-weight: 700; font-size: 16px; color: #FAB80F; margin-bottom: 2px">Thời gian diễn ra từ:</p>
+            <div class="description-inner">
+                {{#activitydates}}
+                    {{>core_course/activity_date}}
+                {{/activitydates}}
+                <div><i class="fa fa-globe" aria-hidden="true"></i> Múi giờ - Asia/Ho_Chi_Minh</div>
+            </div>
         </div>
-    </div>
     {{/hasdates}}
 </div>
