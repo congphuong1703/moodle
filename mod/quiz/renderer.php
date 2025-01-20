@@ -859,9 +859,10 @@ class mod_quiz_renderer extends plugin_renderer_base
   public function view_page($course, $quiz, $cm, $context, $viewobj)
   {
     $output = '';
-
+    $output = html_writer::start_tag("div", array('class' => 'customize-attempt'));
     $output .= $this->view_page_tertiary_nav($viewobj);
     $output .= $this->view_information($quiz, $cm, $context, $viewobj->infomessages);
+    $output .= html_writer::end_tag("div");
     $output .= $this->view_table($quiz, $context, $viewobj);
     $output .= $this->view_result_info($quiz, $context, $cm, $viewobj);
     $output .= $this->box($this->view_page_buttons($viewobj), 'quizattempt');
@@ -892,6 +893,7 @@ class mod_quiz_renderer extends plugin_renderer_base
 
     if ($content) {
       return html_writer::div(html_writer::div($content, 'row'), 'container-fluid tertiary-navigation');
+    
     } else {
       return '';
     }
@@ -1011,8 +1013,10 @@ class mod_quiz_renderer extends plugin_renderer_base
   public function view_page_guest($course, $quiz, $cm, $context, $messages, $viewobj)
   {
     $output = '';
+    $output = html_writer::start_tag("div", array('class' => 'customize-attempt'));
     $output .= $this->view_page_tertiary_nav($viewobj);
     $output .= $this->view_information($quiz, $cm, $context, $messages);
+    $output .= html_writer::end_tag("div");
     $guestno = html_writer::tag('p', get_string('guestsno', 'quiz'));
     $liketologin = html_writer::tag('p', get_string('liketologin'));
     $referer = get_local_referer(false);
@@ -1034,8 +1038,10 @@ class mod_quiz_renderer extends plugin_renderer_base
   {
     global $CFG;
     $output = '';
+    $output = html_writer::start_tag("div", array('class' => 'customize-attempt'));
     $output .= $this->view_page_tertiary_nav($viewobj);
     $output .= $this->view_information($quiz, $cm, $context, $messages);
+    $output .= html_writer::end_tag("div");
     $youneedtoenrol = html_writer::tag('p', get_string('youneedtoenrol', 'quiz'));
     $button = html_writer::tag('p',
       $this->continue_button($CFG->wwwroot . '/course/view.php?id=' . $course->id));

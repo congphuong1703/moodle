@@ -137,6 +137,7 @@ class participants extends \table_sql implements dynamic_table {
         $columns[] = 'select';
 
         $headers[] = get_string('fullname');
+        // $headers[] = 'Họ và tên';
         $columns[] = 'fullname';
 
         $extrafields = \core_user\fields::get_identity_fields($this->context);

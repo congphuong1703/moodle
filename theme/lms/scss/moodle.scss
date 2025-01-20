@@ -103,6 +103,10 @@ img.userpicture {
   flex: 0 0 calc(33.33% - 24px);
 }
 
+.course-summary {
+  white-space: normal;
+}
+
 body {
   background-color: #F4F6F4 !important;
 }
@@ -136,7 +140,7 @@ body {
 }
 
 .grade-percent {
-  font-size: 3rem;
+  font-size: 1.5rem;
 }
 
 .grade-min-percent {
@@ -308,3 +312,14 @@ body {
   padding: 20px !important;
 }
 
+
+.c1 a:first-child{
+  width: fit-content;
+  display: block;
+  float: left;
+  margin-right: 5px;
+}
+
+.c1 i{
+  float: inline-end;
+}

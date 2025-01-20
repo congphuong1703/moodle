@@ -158,50 +158,132 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
         return $output;
     }
 
-    function card_grade($course, $quiz, $viewobj)
-    {
+    // function card_grade($course, $quiz, $viewobj)
+    // {
+    //     global $DB;
+    //     if (is_null($viewobj->mygrade))
+    //         return;
+        
+    //     $gradeitem = $DB->get_record('grade_items', ['itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'courseid' => $course->id]);
+    //     $gradepass = $gradeitem->gradepass;
+    //     $gradepass_percent = quiz_format_grade($quiz, $gradepass * 100 / $quiz->grade);
+    //     // var_dump($gradeitem);
+    //     // die;
+       
+    //     $mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
+    //     $mygrade_percent = quiz_format_grade($quiz, unformat_float($mygrade) * 100 / $quiz->grade);
+    //     $quizgrade = quiz_format_grade($quiz, $quiz->grade);
+    //     $cardGrade = html_writer::div(
+    //         html_writer::div(
+    //             html_writer::tag('h3', 'Đạt', ['class' => 'card-text, title-course']) .
+    //             html_writer::tag('p', $mygrade_percent . '%', ['class' => 'grade-percent text-lms']) .
+    //             html_writer::tag('p', 'Tối thiểu ' . $gradepass_percent . '%', ['class' => 'grade-min-percent'])
+    //         , 'card-body')
+    //     , 'card card-grade');
+
+    //     $cardPoint = html_writer::div(
+    //         html_writer::div(
+    //             html_writer::tag('h3', 'Điểm số', ['class' => 'card-text, title-course']) .
+    //             html_writer::tag('p', $mygrade, ['class' => 'grade-percent text-lms']) .
+    //             html_writer::tag('p', $quizgrade, ['class' => 'grade-min-percent'])
+    //         , 'card-body')
+    //     , 'card card-grade');
+
+    //     $cardAccuracy = html_writer::div(
+    //         html_writer::div(
+    //             html_writer::tag('h3', 'Độ chính xác' , ['class' => 'card-text, title-course']) .
+    //             html_writer::tag('p', $mygrade_percent, ['class' => 'grade-percent text-lms'])
+    //         , 'card-body')
+    //     , 'card card-grade');
+
+    //     $wrap = html_writer::div(
+    //         $cardGrade . $cardPoint . $cardAccuracy
+    //     , 'wrap-card');
+
+    //     return $wrap;
+    // }
+
+
+    function card_grade($course, $quiz, $viewobj) {
         global $DB;
+        global $USER;
         if (is_null($viewobj->mygrade))
             return;
+
+            // 1. Lấy attempt có điểm cao nhất
+        $sql = "SELECT *
+        FROM {quiz_attempts}
+        WHERE quiz = :quizid AND userid = :userid AND state = 'finished'
+        ORDER BY sumgrades DESC
+        LIMIT 1";
+        $params = [
+        'quizid' => $quiz->id,
+        'userid' => $USER->id,
+        ];
+        $highest_attempt = $DB->get_record_sql($sql, $params);
+        if (!$highest_attempt) {
+            return;
+        }
+        $answered_count = 0;
+        $total_questions = 0;
+
+        $quba = \question_engine::load_questions_usage_by_activity($highest_attempt->uniqueid);
+        foreach ($quba->get_slots() as $slot) {
+            $qa = $quba->get_question_attempt($slot);
+            $total_questions++;
+            if ($qa->get_state()->is_finished()) {
+                $answered_count++;
+            }
+        }
         
         $gradeitem = $DB->get_record('grade_items', ['itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'courseid' => $course->id]);
         $gradepass = $gradeitem->gradepass;
-        $gradepass_percent = quiz_format_grade($quiz, $gradepass * 100 / $quiz->grade);
-        // var_dump($gradeitem);
-        // die;
-       
+        // $gradepass_percent = quiz_format_grade($quiz, $gradepass * 100 / $quiz->grade);
+        $passtring = $viewobj->mygrade >= $gradeitem->gradepass ? 'Đạt' : 'Không đạt';
+        
         $mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
         $mygrade_percent = quiz_format_grade($quiz, unformat_float($mygrade) * 100 / $quiz->grade);
         $quizgrade = quiz_format_grade($quiz, $quiz->grade);
-        $cardGrade = html_writer::div(
+
+        $cardquestion = html_writer::div(
             html_writer::div(
-                html_writer::tag('h3', 'Đạt', ['class' => 'card-text, title-course']) .
-                html_writer::tag('p', $mygrade_percent . '%', ['class' => 'grade-percent text-lms']) .
-                html_writer::tag('p', 'Tối thiểu ' . $gradepass_percent . '%', ['class' => 'grade-min-percent'])
+                html_writer::tag('h3', 'Đã trả lời', ['class' => 'card-text, title-course']) .
+                html_writer::tag('p', $answered_count . '/' . $total_questions, ['class' => 'grade-percent text-lms'])
             , 'card-body')
         , 'card card-grade');
 
-        $cardPoint = html_writer::div(
+        $cardquestionpercent = html_writer::div(
+            html_writer::div(
+                html_writer::tag('h3', 'Phần trăm', ['class' => 'card-text, title-course']) .
+                html_writer::tag('p', format_float($answered_count * 100 / $total_questions, 2) . '%', ['class' => 'grade-percent text-lms'])
+            , 'card-body')
+        , 'card card-grade');
+
+
+        $cardpoint = html_writer::div(
             html_writer::div(
                 html_writer::tag('h3', 'Điểm số', ['class' => 'card-text, title-course']) .
-                html_writer::tag('p', $mygrade, ['class' => 'grade-percent text-lms']) .
-                html_writer::tag('p', $quizgrade, ['class' => 'grade-min-percent'])
+                html_writer::tag('p', $mygrade . '/' . $quizgrade, ['class' => 'grade-percent text-lms'])
+                // html_writer::tag('p', $quizgrade, ['class' => 'grade-min-percent'])
             , 'card-body')
         , 'card card-grade');
 
-        $cardAccuracy = html_writer::div(
+        
+        $cardaccuracy = html_writer::div(
             html_writer::div(
-                html_writer::tag('h3', 'Độ chính xác' , ['class' => 'card-text, title-course']) .
-                html_writer::tag('p', $mygrade_percent, ['class' => 'grade-percent text-lms'])
+                html_writer::tag('h3', 'Đạt/Không đạt' , ['class' => 'card-text, title-course']) .
+                html_writer::tag('p', $passtring, ['class' => 'grade-percent text-lms'])
             , 'card-body')
         , 'card card-grade');
 
         $wrap = html_writer::div(
-            $cardGrade . $cardPoint . $cardAccuracy
+            $cardquestion . $cardquestionpercent . $cardpoint . $cardaccuracy
         , 'wrap-card');
 
         return $wrap;
     }
+    
+    
   protected function render_quiz_nav_question_button(\quiz_nav_question_button $button) {
     $classes = array('qnbutton', $button->stateclass, $button->navmethod, 'btn');
     $extrainfo = array();
