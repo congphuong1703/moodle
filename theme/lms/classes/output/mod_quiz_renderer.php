@@ -1,12 +1,16 @@
 <?php
+
 namespace theme_lms\output;
-use stdClass;
-use html_writer;
+
 use html_table;
+use html_writer;
 use question_display_options;
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die;
 
-class mod_quiz_renderer extends \mod_quiz_renderer {
+class mod_quiz_renderer extends \mod_quiz_renderer
+{
     /*
      * View Page
      */
@@ -20,28 +24,37 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
      * @param mod_quiz_view_object $viewobj
      * @return string HTML to display
      */
-    public function view_page($course, $quiz, $cm, $context, $viewobj) {
+    public function view_page($course, $quiz, $cm, $context, $viewobj)
+    {
         $output = '';
         // var_dump($viewobj->buttontext);
         // die;
-        $output .= $this->view_page_tertiary_nav($viewobj);
-        $output .= $this->view_information($quiz, $cm, $context, $viewobj->infomessages);
+        $output = html_writer::start_tag("div", array('class' => 'customize-attempt'));
+//        if ($viewobj->messages) {
+            $output .= html_writer::start_div('customize-attempt-content');
+            $output .= $this->view_information($quiz, $cm, $context, $viewobj);
+            $output .= html_writer::end_div();
+//        }
         $output .= $this->card_grade($course, $quiz, $viewobj);
         $output .= $this->view_table($quiz, $context, $viewobj);
         // $output .= $this->view_result_info($quiz, $context, $cm, $viewobj);
         $output .= $this->box($this->view_page_buttons($viewobj), 'quizattempt');
+        $output .= $this->view_page_tertiary_nav($viewobj);
+        $output .= html_writer::end_tag("div");
+
         return $output;
     }
 
 
-     /**
+    /**
      * Generates the table of data
      *
      * @param array $quiz Array contining quiz data
      * @param int $context The page context ID
      * @param mod_quiz_view_object $viewobj
      */
-    public function view_table($quiz, $context, $viewobj) {
+    public function view_table($quiz, $context, $viewobj)
+    {
         if (!$viewobj->attempts) {
             return '';
         }
@@ -64,13 +77,13 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
         $table->size[] = '';
         if ($viewobj->markcolumn) {
             $table->head[] = get_string('marks', 'quiz') . ' / ' .
-                    quiz_format_grade($quiz, $quiz->sumgrades);
+                quiz_format_grade($quiz, $quiz->sumgrades);
             $table->align[] = 'center';
             $table->size[] = '';
         }
         if ($viewobj->gradecolumn) {
             $table->head[] = get_string('gradenoun') . ' / ' .
-                    quiz_format_grade($quiz, $quiz->grade);
+                quiz_format_grade($quiz, $quiz->grade);
             $table->align[] = 'center';
             $table->size[] = '';
         }
@@ -103,7 +116,7 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
 
             if ($viewobj->markcolumn) {
                 if ($attemptoptions->marks >= question_display_options::MARK_AND_MAX &&
-                        $attemptobj->is_finished()) {
+                    $attemptobj->is_finished()) {
                     $row[] = quiz_format_grade($quiz, $attemptobj->get_sum_marks());
                 } else {
                     $row[] = '';
@@ -115,14 +128,14 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
 
             if ($viewobj->gradecolumn) {
                 if ($attemptoptions->marks >= question_display_options::MARK_AND_MAX &&
-                        $attemptobj->is_finished()) {
+                    $attemptobj->is_finished()) {
 
                     // Highlight the highest grade if appropriate.
                     if ($viewobj->overallstats && !$attemptobj->is_preview()
-                            && $viewobj->numattempts > 1 && !is_null($viewobj->mygrade)
-                            && $attemptobj->get_state() == quiz_attempt::FINISHED
-                            && $attemptgrade == $viewobj->mygrade
-                            && $quiz->grademethod == QUIZ_GRADEHIGHEST) {
+                        && $viewobj->numattempts > 1 && !is_null($viewobj->mygrade)
+                        && $attemptobj->get_state() == quiz_attempt::FINISHED
+                        && $attemptgrade == $viewobj->mygrade
+                        && $quiz->grademethod == QUIZ_GRADEHIGHEST) {
                         $table->rowclasses[$attemptobj->get_attempt_number()] = 'bestrow';
                     }
 
@@ -134,7 +147,7 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
 
             if ($viewobj->canreviewmine) {
                 $row[] = $viewobj->accessmanager->make_review_link($attemptobj->get_attempt(),
-                        $attemptoptions, $this);
+                    $attemptoptions, $this);
             }
 
             if ($viewobj->feedbackcolumn && $attemptobj->is_finished()) {
@@ -163,13 +176,13 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
     //     global $DB;
     //     if (is_null($viewobj->mygrade))
     //         return;
-        
+
     //     $gradeitem = $DB->get_record('grade_items', ['itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'courseid' => $course->id]);
     //     $gradepass = $gradeitem->gradepass;
     //     $gradepass_percent = quiz_format_grade($quiz, $gradepass * 100 / $quiz->grade);
     //     // var_dump($gradeitem);
     //     // die;
-       
+
     //     $mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
     //     $mygrade_percent = quiz_format_grade($quiz, unformat_float($mygrade) * 100 / $quiz->grade);
     //     $quizgrade = quiz_format_grade($quiz, $quiz->grade);
@@ -204,21 +217,22 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
     // }
 
 
-    function card_grade($course, $quiz, $viewobj) {
+    function card_grade($course, $quiz, $viewobj)
+    {
         global $DB;
         global $USER;
         if (is_null($viewobj->mygrade))
             return;
 
-            // 1. Lấy attempt có điểm cao nhất
+        // 1. Lấy attempt có điểm cao nhất
         $sql = "SELECT *
         FROM {quiz_attempts}
         WHERE quiz = :quizid AND userid = :userid AND state = 'finished'
         ORDER BY sumgrades DESC
         LIMIT 1";
         $params = [
-        'quizid' => $quiz->id,
-        'userid' => $USER->id,
+            'quizid' => $quiz->id,
+            'userid' => $USER->id,
         ];
         $highest_attempt = $DB->get_record_sql($sql, $params);
         if (!$highest_attempt) {
@@ -235,12 +249,12 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
                 $answered_count++;
             }
         }
-        
+
         $gradeitem = $DB->get_record('grade_items', ['itemmodule' => 'quiz', 'iteminstance' => $quiz->id, 'courseid' => $course->id]);
         $gradepass = $gradeitem->gradepass;
         // $gradepass_percent = quiz_format_grade($quiz, $gradepass * 100 / $quiz->grade);
         $passtring = $viewobj->mygrade >= $gradeitem->gradepass ? 'Đạt' : 'Không đạt';
-        
+
         $mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
         $mygrade_percent = quiz_format_grade($quiz, unformat_float($mygrade) * 100 / $quiz->grade);
         $quizgrade = quiz_format_grade($quiz, $quiz->grade);
@@ -249,15 +263,15 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
             html_writer::div(
                 html_writer::tag('h3', 'Đã trả lời', ['class' => 'card-text, title-course']) .
                 html_writer::tag('p', $answered_count . '/' . $total_questions, ['class' => 'grade-percent text-lms'])
-            , 'card-body')
-        , 'card card-grade');
+                , 'card-body')
+            , 'card card-grade');
 
         $cardquestionpercent = html_writer::div(
             html_writer::div(
                 html_writer::tag('h3', 'Phần trăm', ['class' => 'card-text, title-course']) .
                 html_writer::tag('p', format_float($answered_count * 100 / $total_questions, 2) . '%', ['class' => 'grade-percent text-lms'])
-            , 'card-body')
-        , 'card card-grade');
+                , 'card-body')
+            , 'card card-grade');
 
 
         $cardpoint = html_writer::div(
@@ -265,62 +279,63 @@ class mod_quiz_renderer extends \mod_quiz_renderer {
                 html_writer::tag('h3', 'Điểm số', ['class' => 'card-text, title-course']) .
                 html_writer::tag('p', $mygrade . '/' . $quizgrade, ['class' => 'grade-percent text-lms'])
                 // html_writer::tag('p', $quizgrade, ['class' => 'grade-min-percent'])
-            , 'card-body')
-        , 'card card-grade');
+                , 'card-body')
+            , 'card card-grade');
 
-        
+
         $cardaccuracy = html_writer::div(
             html_writer::div(
-                html_writer::tag('h3', 'Đạt/Không đạt' , ['class' => 'card-text, title-course']) .
+                html_writer::tag('h3', 'Đạt/Không đạt', ['class' => 'card-text, title-course']) .
                 html_writer::tag('p', $passtring, ['class' => 'grade-percent text-lms'])
-            , 'card-body')
-        , 'card card-grade');
+                , 'card-body')
+            , 'card card-grade');
 
         $wrap = html_writer::div(
             $cardquestion . $cardquestionpercent . $cardpoint . $cardaccuracy
-        , 'wrap-card');
+            , 'wrap-card');
 
         return $wrap;
     }
-    
-    
-  protected function render_quiz_nav_question_button(\quiz_nav_question_button $button) {
-    $classes = array('qnbutton', $button->stateclass, $button->navmethod, 'btn');
-    $extrainfo = array();
 
-    if ($button->currentpage) {
-      $classes[] = 'thispage';
-      $extrainfo[] = get_string('onthispage', 'quiz');
+
+    protected function render_quiz_nav_question_button(\quiz_nav_question_button $button)
+    {
+        $classes = array('qnbutton', $button->stateclass, $button->navmethod, 'btn');
+        $extrainfo = array();
+
+        if ($button->currentpage) {
+            $classes[] = 'thispage';
+            $extrainfo[] = get_string('onthispage', 'quiz');
+        }
+
+        // Flagged?
+        if ($button->flagged) {
+            $classes[] = 'flagged';
+            $flaglabel = get_string('flagged', 'question');
+        } else {
+            $flaglabel = '';
+        }
+        $extrainfo[] = html_writer::tag('span', $flaglabel, array('class' => 'flagstate'));
+
+        if (is_numeric($button->number)) {
+            $qnostring = 'questionnonav';
+        } else {
+            $qnostring = 'questionnonavinfo';
+        }
+
+        $a = new stdClass();
+        $a->number = $button->number;
+        $a->attributes = implode(' ', $extrainfo);
+        $tagcontents = html_writer::tag('span', '', array('class' => 'thispageholder')) .
+            get_string($qnostring, 'quiz', $a);
+        $tagattributes = array('class' => implode(' ', $classes), 'id' => $button->id,
+            'title' => $button->statestring, 'data-quiz-page' => $button->page);
+
+        if ($button->url) {
+            return html_writer::link($button->url, $tagcontents, $tagattributes);
+        } else {
+            return html_writer::tag('span', $tagcontents, $tagattributes);
+        }
     }
-
-    // Flagged?
-    if ($button->flagged) {
-      $classes[] = 'flagged';
-      $flaglabel = get_string('flagged', 'question');
-    } else {
-      $flaglabel = '';
-    }
-    $extrainfo[] = html_writer::tag('span', $flaglabel, array('class' => 'flagstate'));
-
-    if (is_numeric($button->number)) {
-      $qnostring = 'questionnonav';
-    } else {
-      $qnostring = 'questionnonavinfo';
-    }
-
-    $a = new stdClass();
-    $a->number = $button->number;
-    $a->attributes = implode(' ', $extrainfo);
-    $tagcontents = html_writer::tag('span', '', array('class' => 'thispageholder')) .
-      get_string($qnostring, 'quiz', $a);
-    $tagattributes = array('class' => implode(' ', $classes), 'id' => $button->id,
-                           'title' => $button->statestring, 'data-quiz-page' => $button->page);
-
-    if ($button->url) {
-      return html_writer::link($button->url, $tagcontents, $tagattributes);
-    } else {
-      return html_writer::tag('span', $tagcontents, $tagattributes);
-    }
-  }
 
 }

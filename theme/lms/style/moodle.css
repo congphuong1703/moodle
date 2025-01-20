@@ -25865,8 +25865,6 @@ span[data-flexitour=container][x-placement=right] div[data-role=arrow]:after, sp
     padding: 1.5rem 0.5rem;
   }
   #page.drawers div[role=main] {
-    padding-left: 15px;
-    padding-right: 15px;
   }
 }
 @media (min-width: 992px) {
