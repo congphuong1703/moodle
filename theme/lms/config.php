@@ -33,6 +33,10 @@ $THEME->layouts = [
 
 ];
 
+$THEME->removedprimarynavitems = ['myhome'];
+
+$THEME->javascripts = ['custom'];
+
 $THEME->editor_sheets = [];
 $THEME->parents = ['boost'];
 $THEME->enable_dock = false;

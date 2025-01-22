@@ -166,6 +166,16 @@ class quiz
     }
   }
 
+  public function get_count_questions()
+  {
+    $slots = qbank_helper::get_question_structure($this->quiz->id, $this->context);
+    $this->questions = [];
+    foreach ($slots as $slot) {
+      $this->questions[$slot->questionid] = $slot;
+    }
+    return $this->questions;
+  }
+
   /**
    * Fully load some or all of the questions for this quiz. You must call
    * {@link preload_questions()} first.

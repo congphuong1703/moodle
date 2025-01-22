@@ -164,7 +164,9 @@ if ($attempts) {
 
   $viewobj->feedbackcolumn = quiz_has_feedback($quiz) && $alloptions->overallfeedback;
 }
-
+//echo  print_r($quizobj->get_structure());
+$questioncount = $quizobj->get_structure()->get_question_count();
+$viewobj->questioncount = $questioncount;
 $viewobj->timenow = $timenow;
 $viewobj->numattempts = $numattempts;
 $viewobj->mygrade = $mygrade;
@@ -249,6 +251,8 @@ $viewobj->showbacktocourse = ($viewobj->buttontext === '' &&
   course_get_format($course)->has_view_page());
 
 echo $OUTPUT->header();
+$customcontent = html_writer::div('Nội dung của tôi', 'my-custom-class');
+echo html_writer::div($customcontent, 'activity-header');
 
 if (isguestuser()) {
   // Guests can't do a quiz, so offer them a choice of logging in or going back.
