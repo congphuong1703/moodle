@@ -251,8 +251,8 @@ $viewobj->showbacktocourse = ($viewobj->buttontext === '' &&
   course_get_format($course)->has_view_page());
 
 echo $OUTPUT->header();
-$customcontent = html_writer::div('Nội dung của tôi', 'my-custom-class');
-echo html_writer::div($customcontent, 'activity-header');
+//$customcontent = html_writer::div('Nội dung của tôi', 'my-custom-class');
+//echo html_writer::div($customcontent, 'activity-header');
 
 if (isguestuser()) {
   // Guests can't do a quiz, so offer them a choice of logging in or going back.

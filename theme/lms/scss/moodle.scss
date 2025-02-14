@@ -299,6 +299,7 @@ body {
       background-color: #FFFAEF;
       border: 1px solid #FEECC0;
       padding-left: 20px;
+      flex: 1;
     }
 
     .completion-info {
@@ -337,7 +338,7 @@ div[role="main"] > .customize-attempt {
   border: 1px solid #ADEDD5;
   background-color: #EFFBF7;
   padding: 0 20px;
-  margin-bottom: 20px;
+  flex: 1;
 }
 
 @media (min-width: 768px) {
@@ -361,3 +362,62 @@ div[role="main"] > .customize-attempt {
   display: flex;
   justify-content: space-between;
 }
+
+.customize-activity-dates {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.customize-card-quiz-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.customize-card-quiz {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+#frontpage-available-course-list,
+#frontpage-course-list,
+.course-search-result {
+  margin-top: $spacer * 0.5;
+
+  .coursebox {
+    padding: $spacer * 1;
+    border: $border-width solid $border-color;
+    margin-bottom: $spacer * 0.5;
+
+    @include border-radius();
+  }
+}
+
+.customize-card-quiz-box {
+  border-radius: 12px;
+  background-color: #ffffff !important;
+  border: 1px solid #FFFFFF !important;
+  flex: 0 0 calc(33.33% - 24px);
+  padding: 1rem;
+}
+
+.customize-card-quiz-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.customize-card-quiz-time {
+  background-color: #FFFAEF;
+  border: 1px solid #FEECC0;
+  padding-left: 10px;
+}
+
+#instance-5-header { color: #4D4D4D !important;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;}
