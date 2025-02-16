@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <a href="#" class="text-decoration-none text-muted">&larr; Hỏi bài</a>
+
+    <!-- Question Card -->
+    {{#discussions}}
+        <div class="card mt-3 p-4">
+            <h5 style="display: flex; gap:8px;">
+                <div>
+                    <img src="#" alt="avatar">
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <strong>{{fullname}}</strong> <small class="text-muted">{{createdat}}</small>
+                </div>
+            </h5>
+            <p>{{content}}</p>
+            <div class="border rounded p-3 bg-light">
+                <p><strong>Which of the following phenomenon is showing that matters are made of tiny particles that are
+                    constantly moving in a random manner?</strong></p>
+                <p class="text-muted">Hiện tượng nào sau đây cho thấy vật chất được cấu tạo từ những hạt nhỏ liti đang
+                    chuyển động liên tục một cách ngẫu nhiên?</p>
+
+                <!-- Options -->
+                <div class="question-options">
+                    <label>
+                        <input type="radio" name="answer"> A. Raindrops falling from the sky (Những giọt mưa rơi từ
+                        bầu trời)
+                    </label>
+                    <label>
+                        <input type="radio" name="answer"> B. A car increasing its speed (Một chiếc ô tô tăng tốc
+                        độ)
+                    </label>
+                    <label>
+                        <input type="radio" name="answer"> C. A puddle of water on the road evaporating (Một vũng
+                        nước trên đường đang bốc hơi)
+                    </label>
+                    <label>
+                        <input type="radio" name="answer"> D. A color gas spreading in the air (Khí màu lan tỏa trong
+                        không khí)
+                    </label>
+                </div>
+                {{#quizid}}
+                    <a href="{{urlquiz}}"
+                       style="text-decoration: underline; color:#8E8E8E; font-size: 12px">{{quizname}}</a>
+                {{/quizid}}
+            </div>
+        </div>
+    {{/discussions}}
+</div>
