@@ -414,10 +414,17 @@ div[role="main"] > .customize-attempt {
   padding-left: 10px;
 }
 
-#instance-5-header { color: #4D4D4D !important;
+#instance-5-header {
+  color: #4D4D4D !important;
   font-size: 20px;
   font-weight: 600;
   line-height: 28px;
   text-align: left;
   text-underline-position: from-font;
-  text-decoration-skip-ink: none;}
+  text-decoration-skip-ink: none;
+}
+
+.btn-outline-primary-custom :hover {
+  color: white;
+  background-color: #29BA85;
+}

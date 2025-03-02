@@ -12,8 +12,8 @@ require_once(__DIR__ . '/../../question/engine/lib.php');
 
 global $PAGE, $OUTPUT, $DB, $CFG;
 // Thiết lập tiêu đề trang
-
-$PAGE->set_url(new moodle_url('/theme/lms/askquestion.php'));
+$id = optional_param('id', null, PARAM_INT);
+$PAGE->set_url(new moodle_url('/theme/lms/askquestion.php', ["id" => $id]));
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard'); // Hoặc 'admin', 'report' nếu cần
 // Tiêu đề và breadcrumb
@@ -33,7 +33,8 @@ JOIN {user} u ON d.userid = u.id
                         left JOIN {question_usages} qu ON qatt.questionusageid = qu.id
                       left JOIN {quiz_attempts} qa ON qa.uniqueid = qu.id
                       left JOIN {quiz} qz on qz.id = qa.quiz
-              order by d.id desc");
+              where :idcheck is null or d.id = :id
+              order by d.id desc", ["idcheck" => $id, "id" => $id]);
 foreach ($discussions as $discussion) {
     $cm = get_coursemodule_from_instance('quiz', $discussion->quizid);
     $discussion->urlquiz = $CFG->wwwroot . '/mod/quiz/view.php?id=' . $cm->id;
@@ -42,9 +43,12 @@ $templatecontext = [
     'discussions' => array_values($discussions),
     'returnurl' => $PAGE->url->out_as_local_url(false)
 ];
-
+if ($id) {
+    echo $OUTPUT->render_from_template('theme_lms/askquestiondetail', $templatecontext);
+} else {
+    echo $OUTPUT->render_from_template('theme_lms/askquestion', $templatecontext);
+}
 echo $OUTPUT->header();
 // Render template
-echo $OUTPUT->render_from_template('theme_lms/askquestion', $templatecontext);
 
 echo $OUTPUT->footer();
