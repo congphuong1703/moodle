@@ -1,5 +1,6 @@
-<div class="container mt-4">
-    <a href="#" class="text-decoration-none text-muted">&larr; Hỏi bài</a>
+<div class="container" style="margin-top: 5rem">
+    <a href="#" onclick="window.history.back();" class="text-decoration-none text-muted" style="font-size: 16px">&larr;
+        Hỏi bài</a>
 
     <!-- Question Card -->
     {{#discussions}}
@@ -7,7 +8,7 @@
             <div class="card mt-3 p-4">
                 <h5 style="display: flex; gap:8px;">
                     <div>
-                        <img src="#" alt="avatar">
+                        <img src="pix/avatar.svg" alt="avatar">
                     </div>
                     <div style="display: flex; flex-direction: column">
                         <strong>{{fullname}}</strong> <small class="text-muted">{{createdat}}</small>
@@ -50,4 +51,55 @@
             </div>
         </div>
     {{/discussions}}
+    {{#comments}}
+        <div style="display: flex">
+            <div class="card mt-3 p-4">
+                <h5 style="display: flex; gap:8px;">
+                    <div>
+                        <img src="pix/avatar.svg" alt="avatar">
+                    </div>
+                    <div style="display: flex; flex-direction: column">
+                        <div>
+                            <strong>{{fullname}}</strong>
+                            <span class="badge"
+                                  style="background-color: #4AD7A4; color:white; border-radius: 10px">{{rolename}}</span>
+                        </div>
+                        <small class="text-muted">{{createdat}}</small>
+                    </div>
+                </h5>
+                <p>{{content}}</p>
+            </div>
+        </div>
+    {{/comments}}
+    <div class="card mt-2">
+        <form id="answerquestion" method="post" action="/theme/lms/answerquestion.php">
+            <div class="card-body">
+                <div style="display: flex">
+                    <div>
+                        <h5 style="display: flex; gap:8px;">
+                            <div>
+                                <img src="pix/avatar.svg" alt="avatar">
+                            </div>
+                            <div style="display: flex; flex-direction: column">
+                                <div>
+                                    <strong>{{currentuser}}</strong>
+                                    <span class="badge"
+                                          style="background-color: #4AD7A4; color:white; border-radius: 10px">{{currentrole}}</span>
+                                </div>
+                                <small class="text-muted">{{currentusercreated}}</small>
+                            </div>
+                        </h5>
+
+                    </div>
+                </div>
+                <hr/>
+                <input id="id" value="{{discussionid}}" hidden/>
+                <textarea id="content" class="form-control" placeholder="Nhập câu trả lời" rows="4"
+                          style="width:100%"></textarea>
+            </div>
+            <div class="card-footer" style="text-align: right">
+                <button type="submit" class="btn btn-primary">Gửi câu trả lời</button>
+            </div>
+        </form>
+    </div>
 </div>
