@@ -66,13 +66,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="answerquestion" method="post">
+                <form id="answerquestion" method="post" action="{{urlroot}}/theme/lms/answerquestion.php">
                     <div class="card-body">
                         <div class="mb-3">
-                        <textarea class="form-control" placeholder="Nhập nội dung câu trả lời" rows="4" id="content"
+                        <textarea class="form-control" placeholder="Nhập nội dung câu trả lời" rows="4" name="content"
+                                  id="content"
                                   required></textarea>
                         </div>
-                        <input id="id" hidden/>
+                        <input id="id" name="id" hidden/>
+                        <input id="next" name="next" hidden/>
                         <div>
                             <h6>Chủ đề:</h6>
                             <div class="card p-3" style="background-color: #F4F6F4; border: 1px solid #DFDFDF">
@@ -97,6 +99,7 @@
 <script>
     document.querySelectorAll(".open-modal").forEach(button => {
         button.addEventListener("click", function () {
+            document.getElementById("content").value = ''
             let url = this.getAttribute("data-questionurl"); // Lấy data-id từ button
             let name = this.getAttribute("data-questionname"); // Lấy data-id từ button
             let quizname = this.getAttribute("data-quizname"); // Lấy data-id từ button
@@ -106,6 +109,7 @@
             document.getElementById("questioncontent").innerText = name; // Hiển thị ID
             document.getElementById("questiondetail").setAttribute("href", url); // Hiển thị ID
             document.getElementById("id").value = id; // Hiển thị ID
+            document.getElementById("next").value = 'http://localhost/moodle/theme/lms/askquestion.php'; // Hiển thị ID
             document.getElementById("answerquestion").setAttribute("data-url", urlconfig); // Hiển thị ID
         });
     });

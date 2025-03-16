@@ -22,7 +22,11 @@ $PAGE->set_pagelayout('standard'); // Hoặc 'admin', 'report' nếu cần
 $PAGE->set_title('Hỏi bài');
 $PAGE->set_heading('Trang Tùy Chỉnh');
 //$PAGE->navbar->add('Trang Tùy Chỉnh', new moodle_url('/theme/lms/askquestion.php'))
-
+$qtypemap = ['calculated', 'calculatedmulti', 'calculatedsimple',
+    'ddimageortext', 'ddmarker', 'ddwtos', 'description',
+    'essay', 'gapselect', 'match', 'missingtype', 'multianswer',
+    'multichoice', 'numerical', 'random', 'randomsamatch',
+    'shortanswer', 'truefalse'];
 // Kiểm tra quyền truy cập nếu cần
 require_login(); // Yêu cầu người dùng đăng nhập
 $discussions = $DB->get_records_sql("select d.id, d.userid,d.content, d.questionid, d.isanswer,
@@ -55,6 +59,24 @@ foreach ($discussions as $discussion) {
     $discussion->urlaskquestion = $CFG->wwwroot . '/theme/lms/askquestion.php?id=' . $discussion->id;
     $discussion->cananswer = (is_siteadmin() || !empty($teachers)) ? true : false;
     $discussion->urlconfig = $CFG->wwwroot;
+
+    $discussion->is_multichoice = $discussion->qtype === "multichoice";
+    $discussion->is_truefalse = $discussion->qtype === "truefalse";
+    $discussion->is_mutianswer = $discussion->qtype === "multianswer";
+    $discussion->is_essay = $discussion->qtype === "essay";
+    $discussion->is_shortanswer = $discussion->qtype === "shortanswer";
+
+    $questionanswers = $DB->get_records_sql("SELECT qa.id, qa.question, qa.answer FROM {question_answers} qa 
+        WHERE qa.question = :questionid ", ['questionid' => $discussion->questionid]);
+    if ($discussion->qtype === 'multichoice') {
+        $discussion->options = [];
+        foreach ($questionanswers as $answer) {
+            $discussion->options[] = [
+                'id' => $answer->id,
+                'value' => $answer->answer,
+            ];
+        }
+    }
 }
 $roles = get_user_roles(context_system::instance(), $USER->id);
 $templatecontext = [
@@ -64,8 +86,11 @@ $templatecontext = [
     'currentrole' => is_siteadmin($USER->id) ? "Admin" : ($roles ? $roles[0]->description : ''),
     'returnurl' => $PAGE->url->out_as_local_url(false),
     'discussionid' => $id,
+    'urlroot' => $CFG->wwwroot,
+    'next' => $CFG->wwwroot . '/theme/lms/askquestion.php' . ($id ? ("?id=" . $id) : ""),
     'currentusercreated' => date('d/m/Y H:i:s', time())
 ];
+
 if ($id) {
     echo $OUTPUT->render_from_template('theme_lms/askquestiondetail', $templatecontext);
 } else {

@@ -156,34 +156,11 @@ class core_question_renderer extends plugin_renderer_base
 
     private function askTeacher(question_attempt $qa)
     {
+        global $CFG;
+
         $output = '<div><a href="#" class="ask-teacher-btn" data-toggle="modal" data-target="#askTeacherModal" data-questionid="' . $qa->get_question()->id . '">
                     <i class="fa fa-question-circle"></i> Hỏi giáo viên
                 </a></div>';
-        $output .= '
-    <div class="modal fade" id="askTeacherModal" tabindex="-1" aria-labelledby="askTeacherLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-body">
-            <form id="answerquestion" method="post">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title bold" id="askTeacherLabel">Hỏi giáo viên</h5>
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                            <input type="hidden" id="id" value="' . $qa->get_question()->id . '">
-                            <textarea class="form-control" id="content" placeholder="Nội dung câu hỏi" name="message" rows="4" required></textarea>
-                    </div>
-                    <div class="modal-footer" style="text-align: right"> 
-                        <button type="button" class="btn btn-outline-primary">Bỏ qua</button>
-                        <button type="submit" class="btn btn-primary">Gửi câu hỏi</button>
-                    </div>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>';
         return $output;
     }
 
